@@ -40,4 +40,11 @@ class AvailabilityQueryContainer extends SprykerAvailabilityQueryContainer imple
 
 ### 4. Add ControllerProvider FeedControllerProvider.php to YvesBootstrap
 
-### 5. Open https://[URL]/feed/availability
+### 5. Add basic auth password and user to config file for example in config_default.php
+```
+// ---------- Feed
+$config[FeedConstants::FEED_USER] = 'foo';
+$config[FeedConstants::FEED_PASSWORD] = 'bar';
+```
+
+### 6. Open https://[URL]/feed/availability

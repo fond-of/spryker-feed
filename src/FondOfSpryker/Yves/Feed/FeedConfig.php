@@ -10,7 +10,7 @@ class FeedConfig extends AbstractBundleConfig
     /**
      * @return null|string
      */
-    public function getFeedUser(): string
+    public function getFeedUser(): ?string
     {
         return $this->get(FeedConstants::FEED_USER);
     }
@@ -18,7 +18,7 @@ class FeedConfig extends AbstractBundleConfig
     /**
      * @return null|string
      */
-    public function getFeedPassword()
+    public function getFeedPassword(): ?string
     {
         return $this->get(FeedConstants::FEED_PASSWORD);
     }

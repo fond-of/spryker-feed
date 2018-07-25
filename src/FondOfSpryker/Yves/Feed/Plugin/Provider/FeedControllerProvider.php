@@ -2,21 +2,28 @@
 
 namespace FondOfSpryker\Yves\Feed\Plugin\Provider;
 
-use Pyz\Yves\Application\Plugin\Provider\AbstractYvesControllerProvider;
+use SprykerShop\Yves\ShopApplication\Plugin\Provider\AbstractYvesControllerProvider;
 use Silex\Application;
 
 class FeedControllerProvider extends AbstractYvesControllerProvider
 {
-    const FEED_INDEX = 'feed-index';
+    public const ROUTE_AVAILABILITY = 'feed-availability';
+    public const ROUTE_AVAILABILITY_PATH = '/feed/availability';
+
+    public const ROUTE_AVAILABILITY_ALERT = 'feed-availability-alert';
+    public const ROUTE_AVAILABILITY_ALERT_PATH = '/feed/availability-alert';
 
     /**
      * @param \Silex\Application $app
      *
      * @return void
      */
-    protected function defineControllers(Application $app)
+    protected function defineControllers(Application $app): void
     {
-        $this->createGetController('/feed/availability', static::FEED_INDEX, 'Feed', 'Feed', 'availability')
+        $this->createGetController(static::ROUTE_AVAILABILITY_PATH, static::ROUTE_AVAILABILITY, 'Feed', 'Feed', 'availabilityFeed')
+            ->method('GET');
+
+        $this->createGetController(static::ROUTE_AVAILABILITY_ALERT_PATH, static::ROUTE_AVAILABILITY_ALERT, 'Feed', 'Feed', 'availabilityAlertFeed')
             ->method('GET');
     }
 }

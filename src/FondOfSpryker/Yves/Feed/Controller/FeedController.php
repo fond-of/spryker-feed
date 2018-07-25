@@ -3,12 +3,12 @@
 namespace FondOfSpryker\Yves\Feed\Controller;
 
 use FondOfSpryker\Shared\Feed\FeedConstants;
-use Generated\Shared\Transfer\FeedDataAvailabilityResponseTransfer;
+use FondOfSpryker\Yves\Feed\Response\CsvResponse;
 use Spryker\Shared\Config\Config;
 use Spryker\Yves\Kernel\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @method \FondOfSpryker\Yves\Feed\FeedFactory getFactory()
@@ -19,33 +19,50 @@ class FeedController extends AbstractController
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
+     * @throws
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function availabilityAction(Request $request): Response
+    public function availabilityFeedAction(Request $request): Response
     {
-        if ($request->getUser() != Config::get(FeedConstants::FEED_USER) || $request->getPassword() != Config::get(FeedConstants::FEED_PASSWORD)) {
-            return new RedirectResponse('/error/404');
+        if (! $this->isAuthorized($request)) {
+            throw new NotFoundHttpException();
         }
 
-        return new Response(
-            $this->getAvailabilityFeedContent($this->getClient()->getAvailabilityFeedData()),
-            Response::HTTP_OK,
-            ['Content-Disposition' => 'attachment;filename=feed.csv']
-        );
+        return new CsvResponse($this->getFactory()->createAvailabilityFeed()->create());
     }
 
     /**
-     * @param \Generated\Shared\Transfer\FeedDataAvailabilityResponseTransfer $feedDataAvailabilityResponseTransfer
+     * @param \Symfony\Component\HttpFoundation\Request $request
      *
-     * @return string
+     * @throws
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    protected function getAvailabilityFeedContent(FeedDataAvailabilityResponseTransfer $feedDataAvailabilityResponseTransfer): string
+    public function availabilityAlertFeedAction(Request $request): Response
     {
-        $content = '"SKU";"Quantity"' . "\r\n";
-        foreach ($feedDataAvailabilityResponseTransfer->getFeedDataArray() as $feedDataAvailabilityTransfer) {
-            $content .= '"' . $feedDataAvailabilityTransfer->getSku() . '";"' . $feedDataAvailabilityTransfer->getQuantity() . '"' . "\r\n";
+        if (! $this->isAuthorized($request)) {
+            throw new NotFoundHttpException();
         }
 
-        return $content;
+        return new CsvResponse($this->getFactory()->createAvailabilityAlertFeed()->create());
+    }
+
+    /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     *
+     * @throws
+     *
+     * @return bool
+     */
+    protected function isAuthorized(Request $request): bool
+    {
+        if ($request->getUser() == Config::get(FeedConstants::FEED_USER)
+            && $request->getPassword() == Config::get(FeedConstants::FEED_PASSWORD)) {
+
+            return true;
+        }
+
+        return false;
     }
 }

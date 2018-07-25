@@ -7,6 +7,8 @@
         <property name="string" type="type" />
     </transfer>
 
+
+
     <transfer name="FeedDataAvailabilityResponse">
         <property name="feedDataArray" type="FeedDataAvailability[]" singular="feedData"/>
     </transfer>
@@ -14,5 +16,16 @@
     <transfer name="FeedDataAvailability">
         <property name="sku" type="string" />
         <property name="quantity" type="int" />
+    </transfer>
+
+
+
+    <transfer name="FeedDataAvailabilityAlertResponse">
+        <property name="feedDataArray" type="FeedDataAvailabilityAlert[]" singular="feedData"/>
+    </transfer>
+
+    <transfer name="FeedDataAvailabilityAlert">
+        <property name="sku" type="string" />
+        <property name="subscriberCount" type="int" />
     </transfer>
 </transfers>

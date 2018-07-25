@@ -1,4 +1,5 @@
 <?php
+
 namespace FondOfSpryker\Client\Feed;
 
 use Spryker\Client\Kernel\AbstractDependencyProvider;

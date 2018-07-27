@@ -56,7 +56,7 @@ class AvailabilityAlertFeed
 
         $response = new FeedDataAvailabilityAlertResponseTransfer();
         foreach ($data as $productAbstractId => $subscriberCount) {
-            $productAbstract = $this->productFacade->findProductAbstractById($subscriber->getFkProductAbstract());
+            $productAbstract = $this->productFacade->findProductAbstractById($productAbstractId);
             $alert = new FeedDataAvailabilityAlertTransfer();
             $alert->setSubscriberCount($subscriberCount);
             $alert->setSku($productAbstract->getSku());

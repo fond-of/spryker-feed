@@ -7,8 +7,6 @@ use Generated\Shared\Transfer\FeedDataAvailabilityAlertResponseTransfer;
 use Generated\Shared\Transfer\FeedDataAvailabilityAlertTransfer;
 use Generated\Shared\Transfer\FeedDataRequestTransfer;
 use Spryker\Zed\Product\Business\ProductFacadeInterface;
-use Spryker\Zed\Product\Persistence\ProductQueryContainerInterface;
-use Spryker\Zed\ProductAbstractDataFeed\Persistence\ProductAbstractDataFeedQueryContainer;
 
 /**
  * @method \FondOfSpryker\Zed\Feed\FeedConfig getConfig()

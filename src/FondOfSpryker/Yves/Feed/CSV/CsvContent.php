@@ -7,10 +7,10 @@ class CsvContent implements CsvContentInterface
     /**
      * @var string[]
      */
-    private $headers = [];
+    private $headers;
 
     /**
-     * @var string[][]
+     * @var array
      */
     private $values = [];
 
@@ -57,7 +57,7 @@ class CsvContent implements CsvContentInterface
      */
     protected function convertToString(array $row): string
     {
-        return '"' . implode('";"', $this->escape($row)) . '"'. "\r\n";
+        return '"' . implode('";"', $this->escape($row)) . '"' . "\r\n";
     }
 
     /**
@@ -67,7 +67,7 @@ class CsvContent implements CsvContentInterface
      */
     protected function escape(array $row): array
     {
-        return array_map(function($value) {
+        return array_map(function ($value) {
             return str_replace('"', '\"', trim($value));
         }, $row);
     }

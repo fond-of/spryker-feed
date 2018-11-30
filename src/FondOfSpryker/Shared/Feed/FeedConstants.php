@@ -1,4 +1,5 @@
 <?php
+
 namespace FondOfSpryker\Shared\Feed;
 
 interface FeedConstants

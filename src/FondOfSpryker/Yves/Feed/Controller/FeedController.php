@@ -20,12 +20,13 @@ class FeedController extends AbstractController
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
      * @throws
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function availabilityFeedAction(Request $request): Response
     {
-        if (! $this->isAuthorized($request)) {
+        if (!$this->isAuthorized($request)) {
             throw new NotFoundHttpException();
         }
 
@@ -36,12 +37,13 @@ class FeedController extends AbstractController
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
      * @throws
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function availabilityAlertFeedAction(Request $request): Response
     {
-        if (! $this->isAuthorized($request)) {
+        if (!$this->isAuthorized($request)) {
             throw new NotFoundHttpException();
         }
 
@@ -57,12 +59,6 @@ class FeedController extends AbstractController
      */
     protected function isAuthorized(Request $request): bool
     {
-        if ($request->getUser() == Config::get(FeedConstants::FEED_USER)
-            && $request->getPassword() == Config::get(FeedConstants::FEED_PASSWORD)) {
-
-            return true;
-        }
-
-        return false;
+        return $request->getUser() === Config::get(FeedConstants::FEED_USER) && $request->getPassword() === Config::get(FeedConstants::FEED_PASSWORD);
     }
 }

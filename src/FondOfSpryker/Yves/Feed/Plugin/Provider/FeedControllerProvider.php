@@ -2,16 +2,13 @@
 
 namespace FondOfSpryker\Yves\Feed\Plugin\Provider;
 
-use SprykerShop\Yves\ShopApplication\Plugin\Provider\AbstractYvesControllerProvider;
 use Silex\Application;
+use SprykerShop\Yves\ShopApplication\Plugin\Provider\AbstractYvesControllerProvider;
 
 class FeedControllerProvider extends AbstractYvesControllerProvider
 {
     public const ROUTE_AVAILABILITY = 'feed-availability';
-    public const ROUTE_AVAILABILITY_PATH = '/feed/availability';
-
     public const ROUTE_AVAILABILITY_ALERT = 'feed-availability-alert';
-    public const ROUTE_AVAILABILITY_ALERT_PATH = '/feed/availability-alert';
 
     /**
      * @param \Silex\Application $app
@@ -20,10 +17,33 @@ class FeedControllerProvider extends AbstractYvesControllerProvider
      */
     protected function defineControllers(Application $app): void
     {
-        $this->createGetController(static::ROUTE_AVAILABILITY_PATH, static::ROUTE_AVAILABILITY, 'Feed', 'Feed', 'availabilityFeed')
+        $this->addAvailabilityFeedRoute()
+            ->addAvailabilityAlertRoute();
+    }
+
+    /**
+     * @return $this
+     */
+    protected function addAvailabilityFeedRoute(): FeedControllerProvider
+    {
+        $this->createController('/{feed}/availability', static::ROUTE_AVAILABILITY, 'Feed', 'Feed', 'availabilityFeed')
+            ->assert('feed', $this->getAllowedLocalesPattern() . 'feed|feed')
+            ->value('feed', 'feed')
             ->method('GET');
 
-        $this->createGetController(static::ROUTE_AVAILABILITY_ALERT_PATH, static::ROUTE_AVAILABILITY_ALERT, 'Feed', 'Feed', 'availabilityAlertFeed')
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    protected function addAvailabilityAlertRoute(): FeedControllerProvider
+    {
+        $this->createController('/{feed}/availability-alert', static::ROUTE_AVAILABILITY_ALERT, 'Feed', 'Feed', 'availabilityAlertFeed')
+            ->assert('feed', $this->getAllowedLocalesPattern() . 'feed|feed')
+            ->value('feed', 'feed')
             ->method('GET');
+
+        return $this;
     }
 }

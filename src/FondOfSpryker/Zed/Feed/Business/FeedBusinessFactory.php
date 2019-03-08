@@ -6,7 +6,9 @@ use FondOfSpryker\Zed\AvailabilityAlert\Persistence\AvailabilityAlertQueryContai
 use FondOfSpryker\Zed\Feed\Business\Availability\AvailabilityAlertFeed;
 use FondOfSpryker\Zed\Feed\Business\Availability\AvailabilityFeed;
 use FondOfSpryker\Zed\Feed\FeedDependencyProvider;
+use Orm\Zed\Store\Persistence\Base\SpyStoreQuery;
 use Pyz\Zed\Availability\Persistence\AvailabilityQueryContainerInterface;
+use Spryker\Shared\Kernel\Store;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
 use Spryker\Zed\Product\Business\ProductFacadeInterface;
 
@@ -59,5 +61,27 @@ class FeedBusinessFactory extends AbstractBusinessFactory
     protected function getAvailabilityAlertQueryContainer(): AvailabilityAlertQueryContainerInterface
     {
         return $this->getProvidedDependency(FeedDependencyProvider::AVAILABILITY_ALERT_QUERY_CONTAINER);
+    }
+
+    /**
+     * @param string $storename
+     *
+     * @return int|null
+     */
+    public function getStoreId(): ?int
+    {
+        /** @var \Orm\Zed\Store\Persistence\Base\SpyStoreQuery $storeQuery */
+        $storeQuery = SpyStoreQuery::create()
+            ->findOneBy('name', $this->getStore()->getStoreName());
+
+        return $storeQuery->getPrimaryKey();
+    }
+
+    /**
+     * @return \Spryker\Shared\Kernel\Store
+     */
+    protected function getStore(): Store
+    {
+        return Store::getInstance();
     }
 }

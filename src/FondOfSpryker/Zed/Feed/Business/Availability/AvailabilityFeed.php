@@ -6,11 +6,13 @@ use Generated\Shared\Transfer\FeedDataAvailabilityResponseTransfer;
 use Generated\Shared\Transfer\FeedDataAvailabilityTransfer;
 use Generated\Shared\Transfer\FeedDataRequestTransfer;
 use Pyz\Zed\Availability\Persistence\AvailabilityQueryContainerInterface;
+use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 
 /**
  * @method \FondOfSpryker\Zed\Feed\FeedConfig getConfig()
+ * @method \FondOfSpryker\Zed\Feed\Business\FeedBusinessFactory getFactory()
  */
-class AvailabilityFeed
+class AvailabilityFeed extends AbstractPlugin
 {
     /**
      * @var \Pyz\Zed\Availability\Persistence\AvailabilityQueryContainerInterface
@@ -32,7 +34,10 @@ class AvailabilityFeed
      */
     public function getAvailabilityFeedData(FeedDataRequestTransfer $feedDataRequestTransfer): FeedDataAvailabilityResponseTransfer
     {
-        $data = $this->availabilityQueryContainer->queryAllAvailability()->find();
+        $data = $this->availabilityQueryContainer->queryAllAvailability()->findBy(
+            'fkStore',
+            $this->getFactory()->getStoreId()
+        );
 
         $feedDataAvailabilityResponse = new FeedDataAvailabilityResponseTransfer();
         foreach ($data->getData() as $spyAvailability) {

@@ -34,10 +34,7 @@ class AvailabilityFeed extends AbstractPlugin
      */
     public function getAvailabilityFeedData(FeedDataRequestTransfer $feedDataRequestTransfer): FeedDataAvailabilityResponseTransfer
     {
-        $data = $this->availabilityQueryContainer->queryAllAvailability()->findBy(
-            'fkStore',
-            $this->getFactory()->getStoreId()
-        );
+        $data = $this->availabilityQueryContainer->queryAllAvailability()->filterByFkStore($this->getFactory()->getStoreId())->find();
 
         $feedDataAvailabilityResponse = new FeedDataAvailabilityResponseTransfer();
         foreach ($data->getData() as $spyAvailability) {

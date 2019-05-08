@@ -6,12 +6,14 @@ use FondOfSpryker\Zed\AvailabilityAlert\Persistence\AvailabilityAlertQueryContai
 use Generated\Shared\Transfer\FeedDataAvailabilityAlertResponseTransfer;
 use Generated\Shared\Transfer\FeedDataAvailabilityAlertTransfer;
 use Generated\Shared\Transfer\FeedDataRequestTransfer;
+use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 use Spryker\Zed\Product\Business\ProductFacadeInterface;
 
 /**
  * @method \FondOfSpryker\Zed\Feed\FeedConfig getConfig()
+ * @method \FondOfSpryker\Zed\Feed\Business\FeedBusinessFactory getFactory()
  */
-class AvailabilityAlertFeed
+class AvailabilityAlertFeed extends AbstractPlugin
 {
     private const STATUS_WAITING = 0;
 
@@ -43,9 +45,13 @@ class AvailabilityAlertFeed
     public function getAvailabilityAlertFeedData(FeedDataRequestTransfer $feedDataRequestTransfer): FeedDataAvailabilityAlertResponseTransfer
     {
         $data = [];
-        $subscribers = $this->availabilityAlertQueryContainer->querySubscriptionsByStatus(static::STATUS_WAITING)->find();
+        $subscribers = $this->availabilityAlertQueryContainer->querySubscriptionsByIdStoreAndStatus(
+            $this->getFactory()->getStoreId(),
+            static::STATUS_WAITING
+        )->find();
+
         foreach ($subscribers as $subscriber) {
-            if (! array_key_exists($subscriber->getFkProductAbstract(), $data)) {
+            if (!array_key_exists($subscriber->getFkProductAbstract(), $data)) {
                 $data[$subscriber->getFkProductAbstract()] = 0;
             }
 

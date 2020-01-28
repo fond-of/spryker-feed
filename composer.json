@@ -21,7 +21,7 @@
     }
   ],
   "require": {
-    "php": ">=7.1",
+    "php": ">=7.2",
     "fond-of-spryker/availability-alert": "dev-spryker_upgrade"
   },
   "require-dev": {

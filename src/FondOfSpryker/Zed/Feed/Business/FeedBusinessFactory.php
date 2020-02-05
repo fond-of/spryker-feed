@@ -34,8 +34,6 @@ class FeedBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @throws
-     *
      * @return \Pyz\Zed\Availability\Persistence\AvailabilityQueryContainerInterface
      */
     protected function getAvailabilityQueryContainer(): AvailabilityQueryContainerInterface
@@ -44,8 +42,6 @@ class FeedBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @throws
-     *
      * @return \Spryker\Zed\Product\Business\ProductFacadeInterface
      */
     protected function getProductFacade(): ProductFacadeInterface
@@ -54,8 +50,6 @@ class FeedBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @throws
-     *
      * @return \FondOfSpryker\Zed\AvailabilityAlert\Persistence\AvailabilityAlertQueryContainerInterface
      */
     protected function getAvailabilityAlertQueryContainer(): AvailabilityAlertQueryContainerInterface

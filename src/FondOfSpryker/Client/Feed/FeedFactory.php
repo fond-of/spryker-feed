@@ -19,8 +19,6 @@ class FeedFactory extends AbstractFactory
     }
 
     /**
-     * @throws
-     *
      * @return \Spryker\Client\ZedRequest\ZedRequestClient
      */
     protected function getZedRequestClient(): ZedRequestClient

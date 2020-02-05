@@ -8,7 +8,7 @@ use Spryker\Yves\Kernel\AbstractBundleConfig;
 class FeedConfig extends AbstractBundleConfig
 {
     /**
-     * @return null|string
+     * @return string|null
      */
     public function getFeedUser(): ?string
     {
@@ -16,7 +16,7 @@ class FeedConfig extends AbstractBundleConfig
     }
 
     /**
-     * @return null|string
+     * @return string|null
      */
     public function getFeedPassword(): ?string
     {

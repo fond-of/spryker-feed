@@ -24,7 +24,7 @@ class FeedControllerProvider extends AbstractYvesControllerProvider
     /**
      * @return $this
      */
-    protected function addAvailabilityFeedRoute(): FeedControllerProvider
+    protected function addAvailabilityFeedRoute()
     {
         $this->createController('/{feed}/availability', static::ROUTE_AVAILABILITY, 'Feed', 'Feed', 'availabilityFeed')
             ->assert('feed', $this->getAllowedLocalesPattern() . 'feed|feed')
@@ -37,7 +37,7 @@ class FeedControllerProvider extends AbstractYvesControllerProvider
     /**
      * @return $this
      */
-    protected function addAvailabilityAlertRoute(): FeedControllerProvider
+    protected function addAvailabilityAlertRoute()
     {
         $this->createController('/{feed}/availability-alert', static::ROUTE_AVAILABILITY_ALERT, 'Feed', 'Feed', 'availabilityAlertFeed')
             ->assert('feed', $this->getAllowedLocalesPattern() . 'feed|feed')

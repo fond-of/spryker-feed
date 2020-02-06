@@ -28,8 +28,9 @@ class AvailabilityAlertFeed extends AbstractPlugin
     private $productFacade;
 
     /**
-     * @param \FondOfSpryker\Zed\AvailabilityAlert\Persistence\AvailabilityAlertQueryContainerInterface $availabilityAlertQueryContainer
-     * @param \Spryker\Zed\Product\Persistence\ProductQueryContainerInterface $productQueryContainer
+     * AvailabilityAlertFeed constructor.
+     * @param  \FondOfSpryker\Zed\AvailabilityAlert\Persistence\AvailabilityAlertQueryContainerInterface  $availabilityAlertQueryContainer
+     * @param  \Spryker\Zed\Product\Business\ProductFacadeInterface  $productFacade
      */
     public function __construct(AvailabilityAlertQueryContainerInterface $availabilityAlertQueryContainer, ProductFacadeInterface $productFacade)
     {

@@ -58,8 +58,6 @@ class FeedBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @param string $storename
-     *
      * @return int|null
      */
     public function getStoreId(): ?int

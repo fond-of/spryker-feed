@@ -5,6 +5,12 @@ namespace FondOfSpryker\Yves\Feed\Plugin\Provider;
 use Silex\Application;
 use SprykerShop\Yves\ShopApplication\Plugin\Provider\AbstractYvesControllerProvider;
 
+/**
+ * Class FeedControllerProvider
+ *
+ * @package FondOfSpryker\Yves\Feed\Plugin\Provider
+ * @deprecated use FondOfSpryker\Yves\Feed\Plugin\Router\FeedRouteProviderPlugin instead
+ */
 class FeedControllerProvider extends AbstractYvesControllerProvider
 {
     public const ROUTE_AVAILABILITY = 'feed-availability';

@@ -38,7 +38,37 @@ class AvailabilityQueryContainer extends SprykerAvailabilityQueryContainer imple
     vendor/bin/console transfer:generate
 ```
 
-### 4. Add ControllerProvider FeedControllerProvider.php to YvesBootstrap
+### 4. Register Controller
+#### Silex Routing (deprecated use Symfony Routing instead)
+add in src/Pyz/Yves/ShopApplication/YvesBootstrap.php
+```
+    /**
+     * @param bool|null $isSsl
+     *
+     * @return \SprykerShop\Yves\ShopApplication\Plugin\Provider\AbstractYvesControllerProvider[]
+     */
+    protected function getControllerProviderStack($isSsl)
+    {
+        return [
+            new FeedControllerProvider(),
+        ];
+    }
+```
+
+#### Symfony Routing
+add in src/Pyz/Yves/Router/RouterDependencyProvider.php
+```
+    /**
+     * @return \Spryker\Yves\RouterExtension\Dependency\Plugin\RouteProviderPluginInterface[]
+     */
+    protected function getRouteProvider(): array
+    {
+        return [
+            ...
+            new FeedRouteProviderPlugin(),
+        ];
+    }
+```
 
 ### 5. Add basic auth password and user to config file for example in config_default.php
 ```

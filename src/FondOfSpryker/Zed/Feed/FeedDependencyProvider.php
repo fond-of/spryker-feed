@@ -2,14 +2,19 @@
 
 namespace FondOfSpryker\Zed\Feed;
 
+use FondOfSpryker\Zed\Feed\Dependency\Facade\FeedToProductFacadeBridge;
+use FondOfSpryker\Zed\Feed\Dependency\Facade\FeedToStoreFacadeBridge;
+use Orm\Zed\Availability\Persistence\SpyAvailabilityQuery;
+use Orm\Zed\AvailabilityAlert\Persistence\FosAvailabilityAlertSubscriptionQuery;
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
 
 class FeedDependencyProvider extends AbstractBundleDependencyProvider
 {
-    public const AVAILABILITY_QUERY_CONTAINER = 'AVAILABILITY_QUERY_CONTAINER';
-    public const AVAILABILITY_ALERT_QUERY_CONTAINER = 'AVAILABILITY_ALERT_QUERY_CONTAINER';
+    public const PROPEL_AVAILABILITY_QUERY = 'PROPEL_AVAILABILITY_QUERY';
+    public const PROPEL_AVAILABILITY_ALERT_SUBSCRIPTION_QUERY = 'PROPEL_AVAILABILITY_ALERT_SUBSCRIPTION_QUERY';
     public const PRODUCT_FACADE = 'PRODUCT_FACADE';
+    public const FACADE_STORE = 'FACADE_STORE';
 
     /**
      * @param \Spryker\Zed\Kernel\Container $container
@@ -18,9 +23,8 @@ class FeedDependencyProvider extends AbstractBundleDependencyProvider
      */
     public function provideBusinessLayerDependencies(Container $container): Container
     {
-        $container = $this->provideAvailabilityQueryContainer($container);
-        $container = $this->provideAvailabilityAlertQueryContainer($container);
         $container = $this->provideProductFacade($container);
+        $container = $this->addStoreFacade($container);
 
         return $container;
     }
@@ -30,10 +34,24 @@ class FeedDependencyProvider extends AbstractBundleDependencyProvider
      *
      * @return \Spryker\Zed\Kernel\Container
      */
-    public function provideAvailabilityQueryContainer(Container $container): Container
+    public function providePersistenceLayerDependencies(Container $container)
     {
-        $container[static::AVAILABILITY_QUERY_CONTAINER] = function (Container $container) {
-            return $container->getLocator()->availability()->queryContainer();
+        $container = $this->addAvailabilityQuery($container);
+        $container = $this->addAvailabilityAlertSubscriptionQuery($container);
+        $container = $this->addStoreFacade($container);
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    public function addAvailabilityQuery(Container $container): Container
+    {
+        $container[static::PROPEL_AVAILABILITY_QUERY] = function () {
+            return SpyAvailabilityQuery::create();
         };
 
         return $container;
@@ -44,10 +62,10 @@ class FeedDependencyProvider extends AbstractBundleDependencyProvider
      *
      * @return \Spryker\Zed\Kernel\Container
      */
-    public function provideAvailabilityAlertQueryContainer(Container $container): Container
+    public function addAvailabilityAlertSubscriptionQuery(Container $container): Container
     {
-        $container[static::AVAILABILITY_ALERT_QUERY_CONTAINER] = function (Container $container) {
-            return $container->getLocator()->availabilityAlert()->queryContainer();
+        $container[static::PROPEL_AVAILABILITY_ALERT_SUBSCRIPTION_QUERY] = function () {
+            return FosAvailabilityAlertSubscriptionQuery::create();
         };
 
         return $container;
@@ -61,7 +79,21 @@ class FeedDependencyProvider extends AbstractBundleDependencyProvider
     public function provideProductFacade(Container $container): Container
     {
         $container[static::PRODUCT_FACADE] = function (Container $container) {
-            return $container->getLocator()->product()->facade();
+            return new FeedToProductFacadeBridge($container->getLocator()->product()->facade());
+        };
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    public function addStoreFacade(Container $container): Container
+    {
+        $container[static::FACADE_STORE] = function (Container $container) {
+            return new FeedToStoreFacadeBridge($container->getLocator()->store()->facade());
         };
 
         return $container;

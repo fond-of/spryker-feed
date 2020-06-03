@@ -2,12 +2,13 @@
 
 namespace FondOfSpryker\Zed\Feed\Business\Availability;
 
-use FondOfSpryker\Zed\AvailabilityAlert\Persistence\AvailabilityAlertQueryContainerInterface;
+use FondOfSpryker\Zed\Feed\Dependency\Facade\FeedToProductFacadeInterface;
+use FondOfSpryker\Zed\Feed\Dependency\Facade\FeedToStoreFacadeInterface;
+use FondOfSpryker\Zed\Feed\Persistence\FeedRepositoryInterface;
 use Generated\Shared\Transfer\FeedDataAvailabilityAlertResponseTransfer;
 use Generated\Shared\Transfer\FeedDataAvailabilityAlertTransfer;
 use Generated\Shared\Transfer\FeedDataRequestTransfer;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
-use Spryker\Zed\Product\Business\ProductFacadeInterface;
 
 /**
  * @method \FondOfSpryker\Zed\Feed\FeedConfig getConfig()
@@ -18,24 +19,33 @@ class AvailabilityAlertFeed extends AbstractPlugin
     private const STATUS_WAITING = 0;
 
     /**
-     * @var \FondOfSpryker\Zed\AvailabilityAlert\Persistence\AvailabilityAlertQueryContainer
+     * @var \FondOfSpryker\Zed\Feed\Persistence\FeedRepositoryInterface
      */
-    private $availabilityAlertQueryContainer;
+    protected $feedRepository;
 
     /**
-     * @var \Spryker\Zed\Product\Business\ProductFacadeInterface
+     * @var \FondOfSpryker\Zed\Feed\Dependency\Facade\FeedToProductFacadeInterface
      */
-    private $productFacade;
+    protected $productFacade;
 
     /**
-     * AvailabilityAlertFeed constructor.
-     * @param  \FondOfSpryker\Zed\AvailabilityAlert\Persistence\AvailabilityAlertQueryContainerInterface  $availabilityAlertQueryContainer
-     * @param  \Spryker\Zed\Product\Business\ProductFacadeInterface  $productFacade
+     * @var \FondOfSpryker\Zed\Feed\Dependency\Facade\FeedToStoreFacadeInterface
      */
-    public function __construct(AvailabilityAlertQueryContainerInterface $availabilityAlertQueryContainer, ProductFacadeInterface $productFacade)
-    {
-        $this->availabilityAlertQueryContainer = $availabilityAlertQueryContainer;
+    protected $storeFacade;
+
+    /**
+     * @param \FondOfSpryker\Zed\Feed\Persistence\FeedRepositoryInterface $feedRepository
+     * @param \FondOfSpryker\Zed\Feed\Dependency\Facade\FeedToProductFacadeInterface $productFacade
+     * @param \FondOfSpryker\Zed\Feed\Dependency\Facade\FeedToStoreFacadeInterface $storeFacade
+     */
+    public function __construct(
+        FeedRepositoryInterface $feedRepository,
+        FeedToProductFacadeInterface $productFacade,
+        FeedToStoreFacadeInterface $storeFacade
+    ) {
+        $this->feedRepository = $feedRepository;
         $this->productFacade = $productFacade;
+        $this->storeFacade = $storeFacade;
     }
 
     /**
@@ -46,10 +56,10 @@ class AvailabilityAlertFeed extends AbstractPlugin
     public function getAvailabilityAlertFeedData(FeedDataRequestTransfer $feedDataRequestTransfer): FeedDataAvailabilityAlertResponseTransfer
     {
         $data = [];
-        $subscribers = $this->availabilityAlertQueryContainer->querySubscriptionsByIdStoreAndStatus(
-            $this->getFactory()->getStoreId(),
+        $subscribers = $this->feedRepository->findSubscriptionsByIdStoreAndStatus(
+            $this->storeFacade->getCurrentStore()->getIdStore(),
             static::STATUS_WAITING
-        )->find();
+        );
 
         foreach ($subscribers as $subscriber) {
             if (!array_key_exists($subscriber->getFkProductAbstract(), $data)) {

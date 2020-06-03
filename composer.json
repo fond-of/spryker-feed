@@ -4,20 +4,8 @@
   "license": "MIT",
   "authors": [
     {
-      "name": "Markus Nörenberg",
-      "email": "noerenberg.markus@gmail.com"
-    },
-    {
-      "name": "Daniel Rose",
-      "email": "daniel-rose@gmx.de"
-    },
-    {
-      "name": "Pascal Fischer",
-      "email": "p-fischer@gmx.net"
-    },
-    {
-      "name": "Jozsef Geng",
-      "email": "gengjozsef86@gmail.com"
+      "name": "FOND OF",
+      "email": "spryker@fondof.de"
     }
   ],
   "require": {

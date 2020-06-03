@@ -2,10 +2,11 @@
 
 namespace FondOfSpryker\Zed\Feed\Business\Availability;
 
+use FondOfSpryker\Zed\Feed\Dependency\Facade\FeedToStoreFacadeInterface;
+use FondOfSpryker\Zed\Feed\Persistence\FeedRepositoryInterface;
 use Generated\Shared\Transfer\FeedDataAvailabilityResponseTransfer;
 use Generated\Shared\Transfer\FeedDataAvailabilityTransfer;
 use Generated\Shared\Transfer\FeedDataRequestTransfer;
-use Pyz\Zed\Availability\Persistence\AvailabilityQueryContainerInterface;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 
 /**
@@ -15,16 +16,23 @@ use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 class AvailabilityFeed extends AbstractPlugin
 {
     /**
-     * @var \Pyz\Zed\Availability\Persistence\AvailabilityQueryContainerInterface
+     * @var \FondOfSpryker\Zed\Feed\Persistence\FeedRepositoryInterface
      */
-    private $availabilityQueryContainer;
+    protected $feedRepository;
 
     /**
-     * @param \Pyz\Zed\Availability\Persistence\AvailabilityQueryContainerInterface $availabilityQueryContainer
+     * @var \FondOfSpryker\Zed\Feed\Dependency\Facade\FeedToStoreFacadeInterface
      */
-    public function __construct(AvailabilityQueryContainerInterface $availabilityQueryContainer)
+    protected $storeFacade;
+
+    /**
+     * @param \FondOfSpryker\Zed\Feed\Persistence\FeedRepositoryInterface $feedRepository
+     * @param \FondOfSpryker\Zed\Feed\Dependency\Facade\FeedToStoreFacadeInterface $storeFacade
+     */
+    public function __construct(FeedRepositoryInterface $feedRepository, FeedToStoreFacadeInterface $storeFacade)
     {
-        $this->availabilityQueryContainer = $availabilityQueryContainer;
+        $this->feedRepository = $feedRepository;
+        $this->storeFacade = $storeFacade;
     }
 
     /**
@@ -34,10 +42,10 @@ class AvailabilityFeed extends AbstractPlugin
      */
     public function getAvailabilityFeedData(FeedDataRequestTransfer $feedDataRequestTransfer): FeedDataAvailabilityResponseTransfer
     {
-        $data = $this->availabilityQueryContainer->queryAllAvailability()->filterByFkStore($this->getFactory()->getStoreId())->find();
+        $data = $this->feedRepository->getAllAvailabilityByStore($this->storeFacade->getCurrentStore()->getIdStore());
 
         $feedDataAvailabilityResponse = new FeedDataAvailabilityResponseTransfer();
-        foreach ($data->getData() as $spyAvailability) {
+        foreach ($data as $spyAvailability) {
             /** @var \Orm\Zed\Availability\Persistence\SpyAvailability $spyAvailability */
 
             $feedData = new FeedDataAvailabilityTransfer();
